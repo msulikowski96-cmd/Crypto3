@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 // Upload key for Google Play. keystore.properties is never committed; see README.
@@ -14,17 +15,19 @@ val hasUploadKey = keystoreProperties.getProperty("storeFile") != null
 
 android {
     namespace = "com.example.cryptograms"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "io.github.msulikowski96.cryptograms"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
+    }
 
+    androidResources {
         // The app is translated into English and Polish only.
-        resourceConfigurations += listOf("en", "pl")
+        localeFilters += listOf("en", "pl")
     }
 
     val customDebugKeystore = rootProject.file("debug.keystore")
@@ -52,7 +55,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -64,20 +67,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     packaging {
