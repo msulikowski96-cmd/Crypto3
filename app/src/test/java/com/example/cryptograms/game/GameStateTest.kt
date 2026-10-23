@@ -28,6 +28,7 @@ class GameStateTest {
     @Test
     fun punctuationAndSpacesAreKept() {
         val p = puzzle()
+        assertEquals(quote.text, p.originalText)
         assertEquals(p.text.length, p.cipherText.length)
         assertEquals(',', p.cipherText[6])
         assertEquals('.', p.cipherText.last())

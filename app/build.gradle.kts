@@ -17,7 +17,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.cryptograms"
+        applicationId = "io.github.msulikowski96.cryptograms"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -27,12 +27,15 @@ android {
         resourceConfigurations += listOf("en", "pl")
     }
 
+    val customDebugKeystore = rootProject.file("debug.keystore")
     signingConfigs {
-        create("debugConfig") {
-            storeFile = file("${rootDir}/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+        if (customDebugKeystore.exists()) {
+            getByName("debug") {
+                storeFile = customDebugKeystore
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
         }
         if (hasUploadKey) {
             create("upload") {
@@ -46,7 +49,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("debugConfig")
+            signingConfig = signingConfigs.getByName("debug")
         }
         release {
             isMinifyEnabled = true
@@ -56,7 +59,7 @@ android {
             )
             // Upload key when keystore.properties exists, otherwise the debug key
             // (so a local release build still installs).
-            signingConfig = signingConfigs.getByName(if (hasUploadKey) "upload" else "debugConfig")
+            signingConfig = signingConfigs.getByName(if (hasUploadKey) "upload" else "debug")
         }
     }
 

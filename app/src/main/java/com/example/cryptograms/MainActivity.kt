@@ -42,7 +42,6 @@ class MainActivity : ComponentActivity() {
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 val settings by viewModel.settings.collectAsStateWithLifecycle()
                 val stats by viewModel.stats.collectAsStateWithLifecycle()
-                val mistakeEvents by viewModel.mistakeEvents.collectAsStateWithLifecycle()
                 var onSettings by rememberSaveable { mutableStateOf(false) }
 
                 // Stop the clock while the app is in the background.
@@ -80,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             state = state,
                             settings = settings,
                             stats = stats,
-                            mistakeEvents = mistakeEvents,
+                            mistakeEvents = viewModel.mistakeEvents,
                             onBack = ::finish,
                             onNewPuzzle = viewModel::newPuzzle,
                             onOpenSettings = { onSettings = true },

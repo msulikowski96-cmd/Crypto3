@@ -29,6 +29,7 @@ class Puzzle(
     val difficulty: Difficulty,
     val encrypt: Map<Char, Char>,
     val revealed: Set<Char>,
+    val originalText: String = text,
 ) {
     /** cipher letter -> plain letter */
     val decrypt: Map<Char, Char> = encrypt.entries.associate { (plain, cipher) -> cipher to plain }
@@ -55,7 +56,7 @@ class Puzzle(
                 .take(revealCount)
                 .map { encrypt.getValue(it) }
                 .toSet()
-            return Puzzle(text, quote.language, quote.author, difficulty, encrypt, revealed)
+            return Puzzle(text, quote.language, quote.author, difficulty, encrypt, revealed, quote.text)
         }
 
         /** A random substitution of [alphabet] where no letter maps to itself. */

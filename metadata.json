@@ -1,6 +1,0 @@
-{
-  "name": "Cryptograms",
-  "description": "Cryptogram puzzle solving game in English and Polish",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

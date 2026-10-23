@@ -83,13 +83,14 @@ import com.example.cryptograms.game.Difficulty
 import com.example.cryptograms.game.GameState
 import com.example.cryptograms.ui.theme.Palette
 import com.example.cryptograms.ui.theme.SerifFamily
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun GameScreen(
     state: GameState,
     settings: Settings,
     stats: Map<Difficulty, DifficultyStats>,
-    mistakeEvents: Int,
+    mistakeEvents: Flow<Unit>,
     onBack: () -> Unit,
     onNewPuzzle: (Difficulty) -> Unit,
     onOpenSettings: () -> Unit,
@@ -105,9 +106,11 @@ fun GameScreen(
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(mistakeEvents) {
-        if (mistakeEvents > 0 && settings.haptics) {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+    LaunchedEffect(mistakeEvents, settings.haptics) {
+        mistakeEvents.collect {
+            if (settings.haptics) {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            }
         }
     }
     LaunchedEffect(state.isSolved, state.puzzle) {

@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.cryptograms.data.Quotes
 import com.example.cryptograms.data.SettingsRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -20,8 +23,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     val stats = repository.stats
 
     /** Emits once per rejected/wrong guess so the UI can buzz. */
-    private val _mistakeEvents = MutableStateFlow(0)
-    val mistakeEvents: StateFlow<Int> = _mistakeEvents.asStateFlow()
+    private val _mistakeEvents = Channel<Unit>(Channel.BUFFERED)
+    val mistakeEvents: Flow<Unit> = _mistakeEvents.receiveAsFlow()
 
     private var timerJob: Job? = null
     private var screenVisible = true
@@ -56,7 +59,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val before = _state.value
         val after = before.guess(letter, settings.value.autoAdvance)
         _state.value = after
-        if (after.mistakes > before.mistakes) _mistakeEvents.value++
+        if (after.mistakes > before.mistakes) _mistakeEvents.trySend(Unit)
         onMaybeSolved(before, after)
     }
 

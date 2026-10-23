@@ -85,7 +85,7 @@ fun ResultsSheet(
             if (state.isSolved) {
                 Spacer(Modifier.height(18.dp))
                 Text(
-                    text = "“${state.puzzle.text.lowercase().replaceFirstChar { it.uppercase() }}”",
+                    text = "“${state.puzzle.originalText}”",
                     fontFamily = SerifFamily,
                     fontSize = 19.sp,
                     color = Palette.TextPrimary,
